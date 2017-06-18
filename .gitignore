@@ -1,0 +1,46 @@
+# directory names starting and ending with / will be excluded from root IDEA module
+# directory names ending with / will be excluded from all IDEA modules (see ide.gradle)
+
+# Gradle
+.gradle/
+build/
+
+# Maven
+target/
+
+# IDEA
+.idea/libraries
+.idea/scopes
+.idea/.name
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/gradle.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/workspace.xml
+*.iml
+*.ipr
+*.iws
+out/
+
+# Eclipse
+.project
+.classpath
+.settings/
+bin/
+
+# Grails
+stacktrace.log
+
+# Documentation
+/docs/_build/
+
+# Mac
+.DS_Store
+
+# Shippable CI
+/shippable/
+
+.idea/
+
+
