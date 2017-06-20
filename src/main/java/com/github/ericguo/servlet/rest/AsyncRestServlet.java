@@ -71,7 +71,7 @@ public class AsyncRestServlet extends HttpServlet {
 						}
 					}
 					//matched = matchedInvoke(request, response, pattern, args);
-
+					matched = true;
 					asyncHandleRequest(request,handlers,pattern,args);
 
 					break;

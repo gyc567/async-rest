@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -39,14 +40,7 @@ public class Dispatcher extends HttpServlet {
                             args[i] = matcher.group(i + 1);
                         }
                     }
-                    Class handlerClass = handlers.get(pattern);
-                    Object handlerInstance = handlerClass.newInstance();
-                    handlerClass.getField("request").set(handlerInstance, request);
-                    handlerClass.getField("response").set(handlerInstance, response);
-                    handlerClass.getMethod(request.getMethod().toLowerCase(), String[].class).invoke(
-                            handlerInstance,
-                            (Object) args
-                    );
+                    invokeHandleInstance(request, response, pattern, args);
                     matched = true;
                     break;
                 }
@@ -62,5 +56,16 @@ public class Dispatcher extends HttpServlet {
             out.flush();
             out.close();
         }
+    }
+
+    private void invokeHandleInstance(HttpServletRequest request, HttpServletResponse response, Pattern pattern, Object args) throws IllegalAccessException, InstantiationException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+        Class handlerClass = handlers.get(pattern);
+        Object handlerInstance = handlerClass.newInstance();
+        handlerClass.getField("request").set(handlerInstance, request);
+        handlerClass.getField("response").set(handlerInstance, response);
+        handlerClass.getMethod(request.getMethod().toLowerCase(), String[].class).invoke(
+                handlerInstance,
+                args
+        );
     }
 }

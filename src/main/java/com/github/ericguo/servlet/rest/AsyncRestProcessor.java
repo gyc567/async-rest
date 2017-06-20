@@ -12,13 +12,12 @@ public class AsyncRestProcessor implements Runnable {
     public static final String REQUEST = "request";
     public static final String RESPONSE = "response";
     private AsyncContext asyncContext;
-    private int secs;
+
     private Pattern pattern;
     private Object args;
     private Map<Pattern, Class> handlers;
 
-    public AsyncRestProcessor() {
-    }
+
 
     public AsyncRestProcessor(AsyncContext asyncCtx, Map<Pattern, Class> handlers, Pattern pattern, Object args) {
         this.asyncContext = asyncCtx;
@@ -35,7 +34,7 @@ public class AsyncRestProcessor implements Runnable {
         try {
 //			PrintWriter out = asyncContext.getResponse().getWriter();
 //			out.write("From AsyncRequestProcessor:Processing done for " + secs + " milliseconds!!Hi Hero!");
-            matchedInvoke(asyncContext, handlers, pattern, args);
+            boolean isInvoked= invokeHandleInstance(asyncContext, handlers, pattern, args);
 
         } catch (IllegalAccessException e) {
             e.printStackTrace();
@@ -53,8 +52,9 @@ public class AsyncRestProcessor implements Runnable {
     }
 
 
-    private boolean matchedInvoke(AsyncContext asyncContext, Map<Pattern, Class> handlers, Pattern pattern, Object args) throws IllegalAccessException, InstantiationException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
-        boolean matched;
+    private boolean invokeHandleInstance(AsyncContext asyncContext, Map<Pattern, Class> handlers, Pattern pattern, Object args) throws IllegalAccessException, InstantiationException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+        boolean isInvoked;
+        System.out.println("matchedInvoke---start ");
         Class handlerClass = handlers.get(pattern);
         Object handlerInstance = handlerClass.newInstance();
 
@@ -66,8 +66,9 @@ public class AsyncRestProcessor implements Runnable {
                 handlerInstance,
                 args
         );
-        matched = true;
-        return matched;
+        isInvoked = true;
+        System.out.println("matchedInvoke---end ");
+        return isInvoked;
     }
 
 }

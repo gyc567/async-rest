@@ -1,7 +1,6 @@
 package com.github.ericguo.servlet.disruptor;
 
-import com.lmax.disruptor.BusySpinWaitStrategy;
-import com.lmax.disruptor.RingBuffer;
+import com.lmax.disruptor.*;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 
@@ -21,19 +20,22 @@ public class AsyncCallEventDisruptor {
     ExecutorService executor;
 
     public void init() {
+        WaitStrategy BLOCKING_WAIT = new BlockingWaitStrategy();
+        WaitStrategy SLEEPING_WAIT = new SleepingWaitStrategy();
+        WaitStrategy YIELDING_WAIT = new YieldingWaitStrategy();
         // Executor that will be used to construct new threads for consumers
-        executor = Executors.newFixedThreadPool(16);
+        executor = Executors.newFixedThreadPool(300);
 
         // The factory for the event
         AsyncCallEventFactory factory = new AsyncCallEventFactory();
 
         // Specify the size of the ring buffer, must be power of 2.
-        int bufferSize = 128;
+        int bufferSize = 1024;
 
         // Construct the Disruptor
         //disruptor = new Disruptor<>(factory, bufferSize, executor);
        disruptor = new Disruptor(
-                factory, bufferSize, executor, ProducerType.SINGLE, new BusySpinWaitStrategy());
+                factory, bufferSize, executor, ProducerType.SINGLE, YIELDING_WAIT);
 
         // Connect the handler
         disruptor.handleEventsWith(new AsyncCallEventHandler());

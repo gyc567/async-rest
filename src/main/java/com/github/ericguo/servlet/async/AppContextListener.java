@@ -13,8 +13,8 @@ public class AppContextListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 
 		// create the thread pool
-		ThreadPoolExecutor executor = new ThreadPoolExecutor(16, 16, 50000L,
-				TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(128));
+		ThreadPoolExecutor executor = new ThreadPoolExecutor(300, 300, 50000L,
+				TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(1024));
 		servletContextEvent.getServletContext().setAttribute("executor",
 				executor);
 
