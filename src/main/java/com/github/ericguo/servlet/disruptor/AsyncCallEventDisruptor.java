@@ -38,7 +38,7 @@ public class AsyncCallEventDisruptor {
                 factory, bufferSize, executor, ProducerType.SINGLE, YIELDING_WAIT);
 
         // Connect the handler
-        disruptor.handleEventsWith(new AsyncCallEventHandler());
+        disruptor.handleEventsWith(new AsyncCallEventHandler()).then(new ClearingEventHandler());
 
         // Start the Disruptor, starts all threads running
         disruptor.start();
